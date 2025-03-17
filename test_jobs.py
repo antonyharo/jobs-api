@@ -11,6 +11,7 @@ data = {
     "site_name": ["linkedin"],
     "results_wanted": 10,
     "is_remote": False,
+    "linkedin_fetch_description": True,
 }
 
 # Cabeçalhos da requisição
