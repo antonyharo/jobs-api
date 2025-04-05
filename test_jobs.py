@@ -6,12 +6,14 @@ url = "http://localhost:5000/jobs"
 
 # Dados para enviar no corpo da requisição POST
 data = {
-    "search_term": "developer",
+    "search_term": "Developer",
+    "google_search_term": "Developer",
     "location": "New York",
-    "site_name": ["linkedin"],
-    "results_wanted": 10,
+    "site_name": ["linkedin", "google", "indeed"],
+    "results_wanted": 40,
     "is_remote": False,
-    "linkedin_fetch_description": True,
+    # "hours_old": 72,
+    "linkedin_fetch_description": False,  # arrumar dps
 }
 
 # Cabeçalhos da requisição

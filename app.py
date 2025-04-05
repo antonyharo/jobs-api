@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from jobspy import scrape_jobs  
+from jobspy import scrape_jobs
 import logging
 import requests
 import math
+from datetime import date
 
 # Configuração inicial
 app = Flask(__name__)
@@ -52,17 +53,6 @@ def format_proxies(proxies):
     ]
 
 
-def clean_data(data):
-    """Recursivamente remove valores NaN e os substitui por None."""
-    if isinstance(data, dict):
-        return {key: clean_data(value) for key, value in data.items()}
-    if isinstance(data, list):
-        return [clean_data(item) for item in data]
-    if isinstance(data, float) and math.isnan(data):
-        return None
-    return data
-
-
 def configure_proxy(use_tor, proxies):
     """Configura e retorna proxies formatados ou sessão Tor."""
     formatted_proxies = format_proxies(proxies) if proxies else None
@@ -80,6 +70,32 @@ def configure_proxy(use_tor, proxies):
         }, None
 
     return None, None
+
+
+def format_jobs(jobs):
+    """
+    Limpa e formata uma lista de dicionários de jobs:
+    - Converte NaN para None.
+    - Transforma datetime.date em strings no formato DD/MM/AAAA para a chave 'date_posted'.
+    """
+
+    def clean_data(data):
+        if isinstance(data, dict):
+            return {key: clean_data(value) for key, value in data.items()}
+        if isinstance(data, list):
+            return [clean_data(item) for item in data]
+        if isinstance(data, float) and math.isnan(data):
+            return None
+        return data
+
+    jobs = clean_data(jobs)
+
+    for job in jobs:
+        dp = job.get("date_posted")
+        if isinstance(dp, date):
+            job["date_posted"] = dp.strftime("%d/%m/%Y")
+
+    return jobs
 
 
 @app.route("/jobs", methods=["POST"])
@@ -146,10 +162,11 @@ def search_jobs():
         if candidate_id:
             jobs["candidate_id"] = candidate_id
 
-        cleaned_jobs = clean_data(jobs.to_dict(orient="records"))
+        formated_jobs = format_jobs(jobs.to_dict(orient="records"))
+        response_data = {"jobs": formated_jobs}
+
         logging.info(f"Found {len(jobs)} jobs")
 
-        response_data = {"jobs": cleaned_jobs}
         if ip_address:
             response_data["ip_address"] = ip_address
 
