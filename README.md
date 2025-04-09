@@ -1,17 +1,37 @@
-clonar rep: git clone https://github.com/AntonyHaro/jobs-api.git
+## Instalar dependências
 
-instalar dependências
+```
+git clone https://github.com/AntonyHaro/jobs-api.git
+```
 
+```
 python3 -m venv venv
+```
 
+```
 source venv/bin/activate
+```
 
-pip install flask flask-cors requests python-jobspy OU pip install -r requirements.txt
+```
+pip install -r requirements.txt
+```
 
-rodar script de teste:
+## Rodar scripts de teste:
 
-python test_jobs.py
+Para verificar se a lib jobspy está funcionando corretamente:
 
-rodar api:
+```
+python test_jobspy.py
+```
 
+Para verificar se a API de busca de vagas está funcionando corretamente:
+
+```
+python test_api.py
+```
+
+## Iniciar API:
+
+```
 python app.py
+```
