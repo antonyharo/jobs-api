@@ -2,23 +2,19 @@ import csv
 from jobspy import scrape_jobs
 
 jobs = scrape_jobs(
-    site_name=[
-        # "indeed",
-        "linkedin",
-        # "glassdoor",
-        # "google",
-    ],
+    site_name=["linkedin", "indeed", "glassdoor", "google"],
     search_term="Analista de Redes",
-    google_search_term="Analista de Redes",
+    google_search_term="Vagas de Analista de Redes próximas à São Paulo desde ontem",
     location="São Paulo",
-    results_wanted=50,
+    results_wanted=20,
     hours_old=72,
-    country_indeed="USA",
-    linkedin_fetch_description=False # gets more info such as description, direct job url (slower)
-    # proxies=["208.195.175.46:65095", "208.195.175.45:65095", "localhost"],
+    linkedin_fetch_description=False,
 )
+
 print(f"Found {len(jobs)} jobs")
 print(jobs.head())
-jobs.to_csv(
-    "jobs.csv", quoting=csv.QUOTE_NONNUMERIC, escapechar="\\", index=False
-)  # to_excel
+
+jobs_dict = jobs.to_dict(orient="records")
+
+for i, job in enumerate(jobs_dict):
+    print(i)

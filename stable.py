@@ -6,6 +6,7 @@ import requests
 import math
 from datetime import date
 
+# Configuração inicial
 app = Flask(__name__)
 CORS(app)
 
@@ -113,16 +114,24 @@ def search_jobs():
                 400,
             )
 
+        # Extraindo parâmetros
         search_term, location = data["search_term"], data["location"]
-        site_name = ["linkedin", "indeed", "glassdoor", "google"]
+        site_name = data.get(
+            "site_name", ["indeed", "linkedin", "vagas", "glassdoor", "google"]
+        )
         proxies = data.get("proxies")
         use_tor = data.get("use_tor", False)
+        candidate_id = data.get("candidate_id")
 
+        # Configuração de proxies
         proxy_dict, tor_session = configure_proxy(use_tor, proxies)
+
+        # Obtém IP
         session = tor_session or requests.Session()
         ip_address = get_real_ip(session)
         logging.info(f"IP used for the search: {ip_address}")
 
+        # Realiza a busca de empregos
         jobs = scrape_jobs(
             site_name=site_name if isinstance(site_name, list) else [site_name],
             search_term=search_term,
@@ -131,17 +140,27 @@ def search_jobs():
                 f"{search_term} jobs near {location} since yesterday",
             ),
             location=location,
+            distance=data.get("distance", 50),
             job_type=data.get("job_type"),
+            proxies=proxy_dict,
             is_remote=data.get("is_remote", False),
             results_wanted=data.get("results_wanted", 20),
+            easy_apply=data.get("easy_apply", False),
+            description_format=data.get("description_format", "markdown"),
             offset=data.get("offset", 0),
             hours_old=data.get("hours_old", 72),
-            verbose=2,
-            linkedin_fetch_description=True,
-            proxies=proxy_dict,
+            verbose=data.get("verbose", 2),
+            linkedin_fetch_description=data.get("linkedin_fetch_description", False),
+            linkedin_company_ids=data.get("linkedin_company_ids"),
+            country_indeed=data.get("country_indeed", "USA"),
+            enforce_annual_salary=data.get("enforce_annual_salary", False),
             ca_cert=data.get("ca_cert"),
             session=tor_session,
         )
+
+        # Adiciona candidate_id se disponível
+        if candidate_id:
+            jobs["candidate_id"] = candidate_id
 
         formated_jobs = format_jobs(jobs.to_dict(orient="records"))
         response_data = {"jobs": formated_jobs}
