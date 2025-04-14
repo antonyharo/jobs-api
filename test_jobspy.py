@@ -3,7 +3,7 @@ from datetime import date
 
 # === Parâmetros da busca ===
 jobs = scrape_jobs(
-    site_name=["linkedin", "indeed", "glassdoor", "google"],
+    site_name=["linkedin", "indeed", "glassdoor"],
     search_term="Analista de Redes",
     google_search_term="Vagas de Analista de Redes próximas à São Paulo desde ontem",
     location="São Paulo",
