@@ -24,14 +24,15 @@ Para verificar se a lib jobspy está funcionando corretamente:
 python test_jobspy.py
 ```
 
-Para verificar se a API de busca de vagas está funcionando corretamente:
-
-```
-python test_api.py
-```
-
 ## Iniciar API:
 
 ```
 python app.py
 ```
+
+Para verificar se a API de busca de vagas está funcionando corretamente (a API deve estar rodando antes de executar este comando!):
+
+```
+python test_api.py
+```
+
