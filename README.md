@@ -5,6 +5,10 @@ git clone https://github.com/AntonyHaro/jobs-api.git
 ```
 
 ```
+cd jobs-api
+```
+
+```
 python3 -m venv venv
 ```
 
