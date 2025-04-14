@@ -114,7 +114,7 @@ def search_jobs():
             )
 
         search_term, location = data["search_term"], data["location"]
-        site_name = ["linkedin", "indeed", "glassdoor", "google"]
+        site_name = ["linkedin", "indeed", "glassdoor"]
         proxies = data.get("proxies")
         use_tor = data.get("use_tor", False)
 
