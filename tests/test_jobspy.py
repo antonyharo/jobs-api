@@ -1,7 +1,6 @@
 from jobspy import scrape_jobs
 from datetime import date
 
-# === Parâmetros da busca ===
 jobs = scrape_jobs(
     site_name=["linkedin", "indeed", "glassdoor"],
     search_term="Analista de Redes",
@@ -14,13 +13,9 @@ jobs = scrape_jobs(
     verbose=2,
 )
 
-# === Converte os dados em dicionário ===
 jobs_dict = jobs.to_dict(orient="records")
-
-# === Mostra resumo ===
 print(f"\n✅ Vagas encontradas: {len(jobs_dict)}\n")
 
-# === Exibe os resultados no terminal de forma bonita ===
 for idx, job in enumerate(jobs_dict, start=1):
     title = job.get("title")
     company = job.get("company")

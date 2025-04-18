@@ -25,7 +25,7 @@ pip install -r requirements.txt
 Para verificar se a lib jobspy está funcionando corretamente:
 
 ```
-python test_jobspy.py
+python tests/test_jobspy.py
 ```
 
 ## Iniciar API:
@@ -37,6 +37,6 @@ python app.py
 Para verificar se a API de busca de vagas está funcionando corretamente (a API deve estar rodando antes de executar este comando!):
 
 ```
-python test_api.py
+python tests/test_api.py
 ```
 

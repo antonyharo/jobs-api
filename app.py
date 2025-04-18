@@ -2,15 +2,22 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from jobspy import scrape_jobs
 import logging
+from logging.handlers import RotatingFileHandler
 import requests
 import math
+import os
 from datetime import date
 
 app = Flask(__name__)
 CORS(app)
 
+if not os.path.exists("logs"):
+    os.mkdir("logs")
+
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]",
+    filename="logs/api.log",
 )
 
 
@@ -136,7 +143,7 @@ def search_jobs():
             results_wanted=data.get("results_wanted", 20),
             offset=data.get("offset", 0),
             hours_old=data.get("hours_old", 72),
-            verbose=2,
+            verbose=1,
             linkedin_fetch_description=True,
             proxies=proxy_dict,
             ca_cert=data.get("ca_cert"),
@@ -145,8 +152,6 @@ def search_jobs():
 
         formated_jobs = format_jobs(jobs.to_dict(orient="records"))
         response_data = {"jobs": formated_jobs}
-
-        logging.info(f"Found {len(jobs)} jobs")
 
         if ip_address:
             response_data["ip_address"] = ip_address
@@ -158,4 +163,4 @@ def search_jobs():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False, host="0.0.0.0", port=5000)
